@@ -1,3 +1,4 @@
+using HotelListing.Configurations;
 using HotelListing.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -31,6 +32,8 @@ builder.Host.UseSerilog((ctx, lc) => lc
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
         rollingInterval: RollingInterval.Day,
         restrictedToMinimumLevel: LogEventLevel.Information));
+
+builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
 var app = builder.Build();
 
