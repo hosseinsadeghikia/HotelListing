@@ -1,8 +1,11 @@
+using HotelListing;
 using HotelListing.Configurations;
 using HotelListing.Data;
 using HotelListing.IRepository;
 using HotelListing.Repository;
+using HotelListing.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
@@ -11,23 +14,36 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddNewtonsoftJson(st => st.SerializerSettings.
-    ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
-builder.Services.AddCors(co =>
-{
-    co.AddPolicy("AllowAll", cpb => cpb.AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddDbContext<ApplicationDbContext>(optionsAction =>
     optionsAction.UseSqlServer(builder.Configuration.GetConnectionString("HotelConnection")));
 
+//IdentityConfig
+builder.Services.AddAuthentication();
+//builder.Services.AddAuthorization();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+
+builder.Services.AddCors(co =>
+{
+    co.AddPolicy("AllowAll", cpb => cpb.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
+
+builder.Services.AddAutoMapper(typeof(MapperInitializer));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IAuthManager, AuthManager>();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerDoc();
+
+builder.Services.AddControllers().AddNewtonsoftJson(st => st.SerializerSettings.
+    ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console()
@@ -37,11 +53,6 @@ builder.Host.UseSerilog((ctx, lc) => lc
         rollingInterval: RollingInterval.Day,
         restrictedToMinimumLevel: LogEventLevel.Information));
 
-//IOC Container
-
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
 var app = builder.Build();
 
@@ -55,6 +66,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
