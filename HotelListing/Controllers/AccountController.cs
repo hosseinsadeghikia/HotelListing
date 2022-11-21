@@ -12,12 +12,12 @@ namespace HotelListing.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<ApiUser> _userManager;
-        private readonly ILogger<CountryController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IAuthManager _authManager;
 
         public AccountController(UserManager<ApiUser> userManager,
-            ILogger<CountryController> logger,
+            ILogger<AccountController> logger,
             IMapper mapper,
             IAuthManager authManager)
         {

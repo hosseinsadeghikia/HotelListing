@@ -2,24 +2,23 @@
 using HotelListing.Data;
 using HotelListing.IRepository;
 using HotelListing.Models;
-using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Controllers
 {
-    [ApiVersion("1.0")]
-    [Route("api/[controller]")]
+    [ApiVersion("2.0")]
+    [Route("api/Country")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class CountryV2Controller : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<CountryController> _logger;
+        private readonly ILogger<CountryV2Controller> _logger;
         private readonly IMapper _mapper;
 
-        public CountryController(IUnitOfWork unitOfWork,
-            ILogger<CountryController> logger, IMapper mapper)
+        public CountryV2Controller(IUnitOfWork unitOfWork,
+            ILogger<CountryV2Controller> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -27,9 +26,6 @@ namespace HotelListing.Controllers
         }
 
         [HttpGet]
-        //[ResponseCache(CacheProfileName = "120SecondDuration")]
-        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
-        [HttpCacheValidation(MustRevalidate = false)]
         [ProducesResponseType(statusCode: StatusCodes.Status200OK)]
         [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountries()
@@ -51,7 +47,6 @@ namespace HotelListing.Controllers
         }
 
         [HttpGet("{id:int}")]
-        //[ResponseCache(CacheProfileName = "120SecondDuration")]
         [ProducesResponseType(statusCode: StatusCodes.Status200OK)]
         [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountryById(int id)
