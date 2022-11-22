@@ -2,7 +2,7 @@
 using HotelListing.Core.DTOs;
 using HotelListing.Data;
 
-namespace HotelListing.Configurations
+namespace HotelListing.Core.Configurations
 {
     public class MapperInitializer : Profile
     {

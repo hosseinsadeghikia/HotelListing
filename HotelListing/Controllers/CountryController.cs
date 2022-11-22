@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using HotelListing.Core.DTOs;
+using HotelListing.Core.IRepository;
+using HotelListing.Core.Models;
 using HotelListing.Data;
-using HotelListing.IRepository;
-using HotelListing.Models;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

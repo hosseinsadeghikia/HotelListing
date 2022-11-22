@@ -1,10 +1,11 @@
 using AspNetCoreRateLimit;
 using HotelListing;
 using HotelListing.Configurations;
+using HotelListing.Core;
+using HotelListing.Core.IRepository;
+using HotelListing.Core.Repository;
+using HotelListing.Core.Services;
 using HotelListing.Data;
-using HotelListing.IRepository;
-using HotelListing.Repository;
-using HotelListing.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +16,6 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -44,7 +43,7 @@ builder.Services.AddCors(co =>
         .AllowAnyHeader());
 });
 
-builder.Services.AddAutoMapper(typeof(MapperInitializer));
+builder.Services.ConfigureAutoMapper();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IAuthManager, AuthManager>();
 
